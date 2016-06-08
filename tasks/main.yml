@@ -3,7 +3,7 @@
 
 
 - name: Install dependency packages
-  apt: update_cache=true name="{{ item }}"
+  package: update_cache=true name="{{ item }}"
   with_items: "{{ wal_e_packages }}"
 
 - name: install python dependency modules with pip
