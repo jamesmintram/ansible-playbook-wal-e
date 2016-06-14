@@ -20,7 +20,7 @@ wal_e_pips:
   - requests
   - six
 
-wal_e_version: 0.8.0
+wal_e_version: 0.9.2
 
 wal_e_envdir: '/etc/wal-e'
 
