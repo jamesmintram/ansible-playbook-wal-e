@@ -25,13 +25,13 @@
     owner="{{ wal_e_user}}"
     group="{{ wal_e_group }}"
     mode=0600
-  when: wal_e_aws_access_key|default("") != ""
+  when: wal_e_aws_access_key is defined
 
 - name: setup AWS credentials AWS_ACCESS_KEY_ID
   file: |
     state=absent
     path="{{ wal_e_envdir }}/AWS_ACCESS_KEY_ID"
-  when: wal_e_aws_access_key|default("") == ""
+  when: wal_e_aws_access_key is defined
 
 - name: setup AWS credentials AWS_SECRET_ACCESS_KEY
   copy: |
@@ -40,13 +40,13 @@
     owner="{{ wal_e_user}}"
     group="{{ wal_e_group }}"
     mode=0600
-  when: wal_e_aws_secret_key|default("") != ""
+  when: wal_e_aws_secret_key is defined
 
 - name: setup AWS credentials AWS_SECRET_ACCESS_KEY
   file: |
     state=absent
     path="{{ wal_e_envdir }}/AWS_SECRET_ACCESS_KEY"
-  when: wal_e_aws_secret_key|default("") == ""
+  when: wal_e_aws_secret_key is defined
 
 - name: setup WAL-E S3 endpoint
   copy: |
@@ -55,7 +55,7 @@
     owner="{{ wal_e_user}}"
     group="{{ wal_e_group }}"
     mode=0600
-  when: wal_e_s3_endpoint|default("") != ""
+  when: wal_e_s3_endpoint is defined
 
 - name: setup WAL-E S3 endpoint
   file: |
@@ -70,6 +70,25 @@
     owner="{{ wal_e_user}}"
     group="{{ wal_e_group }}"
     mode=0644
+  when: wal_e_s3_prefix is defined
+
+- name: setup WAL-E GS prefix
+  copy: |
+    content="{{ wal_e_gs_prefix }}"
+    dest="{{ wal_e_envdir }}/WALE_GS_PREFIX"
+    owner="{{ wal_e_user}}"
+    group="{{ wal_e_group }}"
+    mode=0644
+  when: wal_e_gs_prefix is defined
+
+- name: setup WAL-E Google application credentials
+  copy: |
+    content="{{ wal_e_google_application_credentials }}"
+    dest="{{ wal_e_envdir }}/GOOGLE_APPLICATION_CREDENTIALS"
+    owner="{{ wal_e_user}}"
+    group="{{ wal_e_group }}"
+    mode=0644
+  when: wal_e_google_application_credentials is defined
 
 # Creates a cron file under /etc/cron.d
 - name: Setup cron job for the base backup
