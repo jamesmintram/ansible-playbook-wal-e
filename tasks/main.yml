@@ -1,19 +1,37 @@
 ---
 # tasks file for wal_e
 
-
 - name: Install dependency packages
   package: update_cache=true name="{{ item }}"
   with_items: "{{ wal_e_packages }}"
 
+- name: install virtualenv if needed
+  pip: name=virtualenv state=present
+  when: wal_e_virtualenv_python_version is defined and wal_e_virtualenv_python_version != ''
+
 - name: install python dependency modules with pip
-  pip: name="{{ item }}"
+  pip:
+    name: "{{ item }}"
+    virtualenv: "{% if wal_e_virtualenv_python_version is defined and wal_e_virtualenv_python_version != \"\" %}{{ wal_e_virtualenv_path }}{% endif %}"
+    virtualenv_python: "{{ wal_e_virtualenv_python_version }}"
   with_items: "{{ wal_e_pips }}"
   when: wal_e_pips
 
 - name: install wal-e from pip
-  pip: name="wal-e" version="{{ wal_e_version | default(none) }}"
+  pip:
+    name: "wal-e"
+    version: "{{ wal_e_version | default(none) }}"
+    virtualenv: "{% if wal_e_virtualenv_python_version is defined and wal_e_virtualenv_python_version != \"\" %}{{ wal_e_virtualenv_path }}{% endif %}"
+    virtualenv_python: "{{ wal_e_virtualenv_python_version }}"
   when: wal_e_pips
+
+- name: symlink wal-e in /bin if installed in virtualenv
+  file:
+    src: "{{ wal_e_virtualenv_path }}/bin/wal-e"
+    dest: /bin/wal-e
+    state: link
+    force: yes
+  when: wal_e_virtualenv_python_version is defined and wal_e_virtualenv_python_version != ''
 
 - name: create wal-e envdir for configuration
   file: path="{{ wal_e_envdir }}" state=directory owner="{{ wal_e_user}}" group="{{ wal_e_group }}"
