@@ -9,6 +9,11 @@
   pip: name=virtualenv state=present
   when: wal_e_virtualenv_python_version is defined and wal_e_virtualenv_python_version != ''
 
+# 'daemontools' provides envdir, but no daemontools rpm is
+# avalaible for CentOS 7. Install envdir using pip in all cases.
+- name: install envdir python module
+  pip: name=envdir state=present
+
 - name: install python dependency modules with pip
   pip:
     name: "{{ item }}"
