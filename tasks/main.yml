@@ -24,7 +24,7 @@
 
 - name: install wal-e from pip
   pip:
-    name: "wal-e"
+    name: "{{ wal_e_name | default('wal-e') }}"
     version: "{{ wal_e_version | default(none) }}"
     virtualenv: "{% if wal_e_virtualenv_python_version is defined and wal_e_virtualenv_python_version != \"\" %}{{ wal_e_virtualenv_path }}{% endif %}"
     virtualenv_python: "{{ wal_e_virtualenv_python_version }}"
