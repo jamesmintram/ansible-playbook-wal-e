@@ -6,7 +6,7 @@
   with_items: "{{ wal_e_packages }}"
 
 - name: install virtualenv if needed
-  pip: name=virtualenv state=present
+  pip: name=virtualenv version=15.1.0 state=present
   when: wal_e_virtualenv_python_version is defined and wal_e_virtualenv_python_version != ''
 
 # 'daemontools' provides envdir, but no daemontools rpm is
